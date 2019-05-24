@@ -67,8 +67,7 @@ public class Article {
 	}
 
 	/**
-	 * \n를 <br/>
-	 * 로 바꾼다.
+	 * \n를 <br/> 로 바꾼다.
 	 */
 	public String getContentHtml() {
 		if (content != null)

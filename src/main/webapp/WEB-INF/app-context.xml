@@ -16,6 +16,14 @@
 
 	<mvc:annotation-driven />
 	<context:component-scan base-package="org.sol" />
+	
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/member/**" />
+			<mvc:mapping path="/article/add*" />
+			<bean class="org.sol.book.chap13.AuthCheckInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
 
 	<bean id="viewResolver"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
