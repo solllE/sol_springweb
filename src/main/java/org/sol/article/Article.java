@@ -9,6 +9,7 @@ public class Article {
 	String name;
 	String cdate;
 	String udate;
+	String writer;
 
 	public String getArticleId() {
 		return articleId;

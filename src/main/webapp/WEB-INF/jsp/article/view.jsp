@@ -10,8 +10,8 @@
 	<h2>글 보기</h2>
 	<p>
 		<a href="./app/article/list">글 목록</a>
-		<a href="./app/article/modify">수정</a>
-		<a href="./app/article/delete">삭제</a>
+		<a href="./app/article/modifyForm?articleId=${article.articleId }">수정</a>
+		<a href="./app/article/remove?articleId=${article.articleId }">삭제</a>
 	</p>
 	<hr />
 	<p>

@@ -2,8 +2,6 @@ package org.sol.article;
 
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.sol.book.chap11.Member;
@@ -14,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class ArticleController {
@@ -68,6 +67,49 @@ public class ArticleController {
 		article.setUserId(member.getMemberId());
 		article.setName(member.getName());
 		articleDao.addArticle(article);
+		return "redirect:/app/article/list";
+	}
+	
+	/**
+	 * 글 수정 화면
+	 */
+	@GetMapping("/article/modifyForm")
+	public String articleModifyForm(@RequestParam("articleId") String articleId, @SessionAttribute("MEMBER") Member member, Model model) {
+		
+		Article article = articleDao.getArticle(articleId);
+		
+		if (!article.getUserId().equals(member.getMemberId())) {
+			return "redirect:/app/article/view?articleId=" + articleId;
+		}
+		
+		model.addAttribute("article", article);
+		return "article/modifyForm";
+	}
+	
+	/**
+	 * 글 수정
+	 */
+	@PostMapping("/article/modify")
+	public String articlemodify(Article article) {
+	
+		articleDao.modifyArticle(article);
+		return "redirect:/app/article/view?articleId=" + article.getArticleId();
+	}
+	
+	/**
+	 * 글 삭제
+	 */
+	@GetMapping("/article/remove")
+	public String removeArticle(@RequestParam("articleId") String articleId, @SessionAttribute("MEMBER") Member member) {
+	
+		Article article = articleDao.getArticle(articleId);
+		
+		if (!article.getUserId().equals(member.getMemberId())) {
+			return "redirect:/app/article/view?articleId=" + articleId;
+		}
+		
+		articleDao.removeArticle(articleId);
+	
 		return "redirect:/app/article/list";
 	}
 }
