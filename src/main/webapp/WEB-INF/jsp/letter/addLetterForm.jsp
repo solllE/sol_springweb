@@ -9,9 +9,9 @@
 	<%@ include file="/WEB-INF/jsp/header.jsp"%>
 	<h2>편지 쓰기</h2>
 	<p>
-		<a href="	./app/members">회원 목록</a>
+		<a href="	./app/members">회원 목록</a>	
 	</p>
-	<form action="./app/letter/addLetter" method="get">
+	<form action="./app/letter/addLetter" method="post">
 		<p>제목 :</p>
 		<p>
 			<input type="text" name="title" maxlength="100" style="width: 100%;" required>

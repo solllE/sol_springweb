@@ -44,7 +44,7 @@ public class LetterDao {
 	}
 
 	/**
-	 * 메일 조회
+	 * 편지 조회
 	 */
 	public Letter getLetter(String letterId, String memberId) {
 		return jdbcTemplate.queryForObject(GET_LETTER, letterMapper, letterId, memberId, memberId);

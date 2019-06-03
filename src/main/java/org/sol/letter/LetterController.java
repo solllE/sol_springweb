@@ -9,6 +9,7 @@ import org.sol.letter.LetterDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
@@ -72,13 +73,13 @@ public class LetterController {
 	/**
 	 * 편지 쓰기
 	 */
-	@GetMapping("/letter/addLetter")
+	@PostMapping("/letter/addLetter")
 	public String letterAdd(Letter letter,
 			@SessionAttribute("MEMBER") Member member) {
 		letter.setSenderId(member.getMemberId());
 		letter.setSenderName(member.getName());
 		letterDao.addLetter(letter);
-		return "letter/addLetter";
+		return "redirect:/app/letter/sendList";
 	}
 
 	/**
