@@ -66,7 +66,7 @@ public class LetterController {
 	 */
 	@GetMapping("/letter/addLetterForm")
 	public String LetterAddForm() {
-		return "article/addLetterForm";
+		return "letter/addLetterForm";
 	}
 
 	/**
@@ -78,7 +78,7 @@ public class LetterController {
 		letter.setSenderId(member.getMemberId());
 		letter.setSenderName(member.getName());
 		letterDao.addLetter(letter);
-		return "redirect:/app/letter/sendList";
+		return "letter/addLetter";
 	}
 
 	/**
