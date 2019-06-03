@@ -12,6 +12,8 @@
 	<p>memberId: ${sessionScope.MEMBER.memberId }</p>
 	<p>email: ${sessionScope.MEMBER.email }</p>
 	<p>name: ${sessionScope.MEMBER.name }</p>
+	<p><a href = "./app/letter/sendList">보낸 편지</a>
+	<p><a href = "./app/letter/receiveList">받은 편지</a>
 	<p>
 		<a href="./app/member/changePwdForm">비밀번호 변경</a>
 	</p>

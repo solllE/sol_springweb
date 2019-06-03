@@ -31,6 +31,8 @@
 					<td>${member.email }</td>
 					<td>${member.name }</td>
 					<td>${member.cdate }</td>
+					<td>　<a
+href="./app/letter/addLetterForm?receiverId=${member.memberId }&receiverName=${member.name }">[메일쓰기]</a></td>
 				</tr>
 			</c:forEach>
 		</tbody>
