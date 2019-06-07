@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
  * @author Jacob
  */
 @Controller
-public class ChangePwdController {
+public class MemberController {
 
 	@Autowired
 	MemberDao memberDao;
@@ -26,7 +26,6 @@ public class ChangePwdController {
 			@RequestParam("currentPassword") String currentPassword,
 			@RequestParam("newPassword") String newPassword,
 			@SessionAttribute("MEMBER") Member member, Model model) {
-
 		int updatedRows = memberDao.changePassword(member.getMemberId(),
 				currentPassword, newPassword);
 

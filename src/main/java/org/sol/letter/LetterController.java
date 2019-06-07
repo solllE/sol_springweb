@@ -2,102 +2,102 @@ package org.sol.letter;
 
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.sol.book.chap11.Member;
-import org.sol.letter.LetterDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
+@Controller
 public class LetterController {
-	
+
 	@Autowired
 	LetterDao letterDao;
-	
-	static final Logger logger = LogManager.getLogger();
-	
+
 	/**
-	 * 받은 목록
+	 * 받은 목록s
 	 */
-	@GetMapping("/letter/receiveList")
-	public void letterReceiveList(@SessionAttribute("MEMBER") Member member,
-			@RequestParam(value = "page", defaultValue = "1") int page, Model model) {
+	@GetMapping("/letter/listReceived")
+	public void listReceived(
+			@RequestParam(value = "page", defaultValue = "1") int page,
+			@SessionAttribute("MEMBER") Member member, Model model) {
 
 		// 페이지당 행의 수와 페이지의 시작점
-		final int COUNT = 100;
-		int offset = (page - 1) * COUNT;
+		final int ROWS_PER_PAGE = 20;
+		int offset = (page - 1) * ROWS_PER_PAGE;
 
-		List<Letter> letterReceiveList = letterDao.listReceiveLetter(member.getMemberId(), offset, COUNT);
-		model.addAttribute("letterReceiveList", letterReceiveList);
+		List<Letter> letters = letterDao.listLettersReceived(
+				member.getMemberId(), offset, ROWS_PER_PAGE);
+		int count = letterDao.countLettersReceived(member.getMemberId());
+
+		model.addAttribute("letters", letters);
+		model.addAttribute("count", count);
 	}
 
-	
 	/**
 	 * 보낸 목록
 	 */
-	@GetMapping("/letter/sendList")
-	public void letterSendList(@SessionAttribute("MEMBER") Member member,
-			@RequestParam(value = "page", defaultValue = "1") int page, Model model) {
+	@GetMapping("/letter/listSent")
+	public void listSent(
+			@RequestParam(value = "page", defaultValue = "1") int page,
+			@SessionAttribute("MEMBER") Member member, Model model) {
 
 		// 페이지당 행의 수와 페이지의 시작점
-		final int COUNT = 100;
-		int offset = (page - 1) * COUNT;
+		final int ROWS_PER_PAGE = 20;
+		int offset = (page - 1) * ROWS_PER_PAGE;
 
-		List<Letter> letterSendList = letterDao.listSendLetter(member.getMemberId(), offset, COUNT);
-		model.addAttribute("letterSendList", letterSendList);
+		List<Letter> letters = letterDao.listLettersSent(member.getMemberId(),
+				offset, ROWS_PER_PAGE);
+		int count = letterDao.countLettersSent(member.getMemberId());
+
+		model.addAttribute("letters", letters);
+		model.addAttribute("count", count);
 	}
 
-	
 	/**
-	 * 편지 보기
+	 * 보기
 	 */
-	@GetMapping("/letter/viewLetter")
-	public void letterView(@RequestParam("letterId") String letterId,
+	@GetMapping("/letter/view")
+	public void view(@RequestParam("letterId") String letterId,
 			@SessionAttribute("MEMBER") Member member, Model model) {
+
+		// 자신의 편지가 아닐 경우 EmptyResultDataAccessException 발생함
 		Letter letter = letterDao.getLetter(letterId, member.getMemberId());
 		model.addAttribute("letter", letter);
-}
-
-	/**
-	 * 편지 쓰기 화면
-	 */
-	@GetMapping("/letter/addLetterForm")
-	public String LetterAddForm() {
-		return "letter/addLetterForm";
 	}
 
 	/**
-	 * 편지 쓰기
+	 * 편지 저장
 	 */
-	@PostMapping("/letter/addLetter")
-	public String letterAdd(Letter letter,
+	@PostMapping("/letter/add")
+	public String add(Letter letter,
 			@SessionAttribute("MEMBER") Member member) {
 		letter.setSenderId(member.getMemberId());
 		letter.setSenderName(member.getName());
 		letterDao.addLetter(letter);
-		return "redirect:/app/letter/sendList";
+		return "redirect:/app/letter/listSent";
 	}
 
 	/**
 	 * 편지 삭제
 	 */
-	@GetMapping("/letter/deleteLetter")
-	public String delete(@RequestParam("letterId") String letterId,
+	@GetMapping("/letter/delete")
+	public String delete(
+			@RequestParam(value = "mode", required = false) String mode,
+			@RequestParam("letterId") String letterId,
 			@SessionAttribute("MEMBER") Member member) {
 		int updatedRows = letterDao.deleteLetter(letterId,
 				member.getMemberId());
-
-		// 권한 체크 : 글이 삭제되었는지 확인
 		if (updatedRows == 0)
-			// 글이 삭제되지 않음. 자신이 쓴 글이 아님
+			// 자신의 편지가 아닐 경우 삭제되지 않음
 			throw new RuntimeException("No Authority!");
 
-		logger.debug("글을 삭제했습니다. letterId={}", letterId);
-		return "redirect:/app/letter/receivelist";
+		if ("SENT".equals(mode))
+			return "redirect:/app/letter/listSent";
+		else
+			return "redirect:/app/letter/listReceived";
 	}
-
 }

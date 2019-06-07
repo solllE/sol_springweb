@@ -16,7 +16,7 @@ public class DefaultController {
 
 	static final Logger logger = LogManager.getLogger();
 
-	@GetMapping("/**")
+	@GetMapping("/**") //매핑되지않은 애들은 다 여기로 매핑된다.
 	public void mapDefault() {
 		logger.debug("Map default.");
 	}
